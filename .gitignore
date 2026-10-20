@@ -1,0 +1,6 @@
+# Hasil build pratinjau (dibuat oleh tools/build_demo.py)
+_site/
+
+# Berkas sistem
+.DS_Store
+Thumbs.db

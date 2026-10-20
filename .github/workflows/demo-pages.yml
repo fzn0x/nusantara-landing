@@ -1,0 +1,62 @@
+name: Pratinjau GitHub Pages
+
+# Bangun ulang pratinjau statis setiap kali tema berubah, lalu terbitkan ke
+# cabang gh-pages. Pratinjau adalah cermin HTML dari front-page.php, jadi ia
+# tidak bisa lagi basi diam-diam begitu ada perubahan pada tema.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.php'
+      - 'style.css'
+      - 'assets/**'
+      - 'screenshot.png'
+      - 'tools/**'
+      - '.github/workflows/demo-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-demo
+  cancel-in-progress: true
+
+jobs:
+  bangun-dan-terbitkan:
+    name: "Bangun & terbitkan pratinjau"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v4
+
+      - name: Bangun pratinjau statis
+        run: python3 tools/build_demo.py
+
+      - name: Periksa hasil sebelum diterbitkan
+        run: python3 tools/check_demo.py
+
+      - name: Pastikan keluaran tidak kosong
+        run: |
+          test -s _site/index.html
+          test -s _site/assets/style.css
+          test -f _site/.nojekyll
+          echo "index.html: $(wc -c < _site/index.html) byte"
+
+      - name: Terbitkan ke cabang gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd _site
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Pratinjau dibangun ulang dari ${GITHUB_SHA::7}"
+          # Riwayat gh-pages selalu dibuat ulang, jadi push paksa memang perlu.
+          git push --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            gh-pages

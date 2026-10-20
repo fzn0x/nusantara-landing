@@ -11,6 +11,10 @@ dari halaman depan, memakai markup dan CSS yang sama persis dengan temanya.
 Ini cermin HTML, bukan WordPress yang berjalan, jadi formulir kontaknya tidak
 mengirim apa pun.
 
+Pratinjau itu **dibangun ulang otomatis** oleh GitHub Actions setiap kali tema
+berubah di cabang `main` (lihat `.github/workflows/demo-pages.yml`), lalu
+diterbitkan ke cabang `gh-pages`. Jadi ia tidak bisa basi diam-diam.
+
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-21759b.svg)](#persyaratan)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4.svg)](#persyaratan)
 [![Lisensi](https://img.shields.io/badge/lisensi-GPL--2.0--or--later-blue.svg)](LICENSE)

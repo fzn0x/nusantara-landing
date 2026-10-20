@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Ambil kode
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Bangun pratinjau statis
         run: python3 tools/build_demo.py
